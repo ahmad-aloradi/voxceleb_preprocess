@@ -10,7 +10,6 @@ import os
 from multiprocessing import Pool, cpu_count, Manager
 from tqdm.auto import tqdm
 from multiprocessing.managers import DictProxy
-import sys
 import logging
 
 # Configure the logger
@@ -547,7 +546,11 @@ if __name__ == "__main__":
                         type=str,
                         default="|",
                         help="Separator used for the metadata file")
-    
+    parser.add_argument("--save_df", 
+                        type=bool,
+                        default=True,
+                        help="saving_df")    
+
     args = parser.parse_args()
     
     # Run Voxceleb Processor
@@ -555,7 +558,9 @@ if __name__ == "__main__":
                                            artifcats_dir=args.artifacts_dir, 
                                            verbose=args.verbose, 
                                            sep=args.sep)
-    utterances_and_stats, utterances_dataframes = voxceleb_processor.generate_metadata(args.min_duration)
+    utterances_and_stats, utterances_dataframes = voxceleb_processor.generate_metadata(
+        args.min_duration, 
+        save_df=args.save_df)
     utterances, utterances_stats = utterances_and_stats
     dev_metadata, speaker_total_metadata = utterances_dataframes
 
